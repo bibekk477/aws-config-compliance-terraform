@@ -199,3 +199,83 @@ terraform apply
 ```bash
 terraform destroy
 ```
+
+# 1. Testing outputs
+
+# View all outputs
+
+terraform output
+
+# View specific outputs
+
+terraform output config_bucket_name
+terraform output config_rules
+terraform output config_recorder_status
+
+# 2. Terraform State Inspection
+
+# List all resources
+
+terraform state list
+
+# Show details of specific resources
+
+terraform state show aws_s3_bucket.config_bucket
+terraform state show aws_config_configuration_recorder.main
+terraform state show aws_iam_role.config_role
+
+# 3. AWS CLI Commands (LocalStack)
+
+## Check S3 Bucket
+
+# List buckets
+
+aws --endpoint-url=http://localhost:4566 s3 ls
+
+# Check bucket versioning
+
+aws --endpoint-url=http://localhost:4566 s3api get-bucket-versioning --bucket `terraform output -raw config_bucket_name`
+
+# Check bucket encryption
+
+aws --endpoint-url=http://localhost:4566 s3api get-bucket-encryption --bucket `terraform output -raw config_bucket_name`
+
+## Check AWS Config
+
+# Describe configuration recorder
+
+aws --endpoint-url=http://localhost:4566 configservice describe-configuration-recorders
+
+# Check recorder status
+
+aws --endpoint-url=http://localhost:4566 configservice describe-configuration-recorder-status
+
+# List Config rules
+
+aws --endpoint-url=http://localhost:4566 configservice describe-config-rules
+
+# Check delivery channel
+
+aws --endpoint-url=http://localhost:4566 configservice describe-delivery-channels
+
+## Check IAM Resources
+
+# List IAM roles
+
+aws --endpoint-url=http://localhost:4566 iam list-roles
+
+# Get specific IAM role
+
+aws --endpoint-url=http://localhost:4566 iam get-role --role-name terraform-governance-demo-config-role
+
+# List IAM policies
+
+aws --endpoint-url=http://localhost:4566 iam list-policies --scope Local
+
+# List IAM users
+
+aws --endpoint-url=http://localhost:4566 iam list-users
+
+# Get IAM user details
+
+aws --endpoint-url=http://localhost:4566 iam get-user --user-name `terraform output -raw demo_user_name`
