@@ -30,6 +30,7 @@ region     = var.aws_region
     kms      = var.localstack_endpoint
     cloudwatch = var.localstack_endpoint
     eks= var.localstack_endpoint
+    configservice = var.localstack_endpoint
     secretsmanager = var.localstack_endpoint
 
 }
